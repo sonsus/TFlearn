@@ -1,3 +1,12 @@
+'''
+tensor shape
+[[1,2,3],[1,2,3],[1,2,3],]
+rank 3 tensor with rank 3 vectors as elements
+
+<==> [3 3) right one is for element dimension (for [1,2,3,])
+<==> [3,3]
+'''
+
 import tensorflow as tf
 
 hello=tf.constant("hello sungkim")
