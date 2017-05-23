@@ -1,6 +1,8 @@
 #lab5_logistic, multivariate classification
 import tensorflow as tf 
 import numpy as np
+import matplotlib.pyplot as plt
+
 np_xy=np.loadtxt("diabetes.csv",delimiter=",",dtype=np.float32)
 mat_len=len(np_xy[0,:])
 n_param=mat_len-1
@@ -12,7 +14,7 @@ key, val= reader.read(fq)
 record_defaults=[[0.] for i in range(mat_len)]
 xy=tf.decode_csv(val, record_defaults=record_defaults)
 
-train_xb, train_yb= tf.train.batch([xy[0:-1],xy[-1:]], batch_size=10)
+train_xb, train_yb= tf.train.batch([xy[0:-1],xy[-1:]], batch_size=20)
 
 
 X=tf.placeholder(tf.float32, shape=[None,n_param])
@@ -37,11 +39,26 @@ sess.run(tf.global_variables_initializer())
 coord=tf.train.Coordinator()
 threads=tf.train.start_queue_runners(sess=sess, coord=coord)
 
+xc=[i for i in range(10001)]
+step100=[]
+yc_cost=[]
+yc_acc=[]
+
 for step in range(10001):
 	x_b, y_b=sess.run([train_xb, train_yb])
 	h, p, a, costv, t=sess.run([hyp, pred, acc, cost,train], feed_dict={X:x_b, Y:y_b})
+	yc_cost.append(costv)
+	yc_acc.append(a)
 	if step%100==0:
+		step100.append(step)
+		#print("\nhypothesis= \n", h,"\nY= \n",y_b,"\nprediction= \n", p, "\n")
 		print("step=", step,"cost= ", costv, "acc= ", a)
-		print("\nhypothesis= \n", h,"\nY= \n",y_b,"\nprediction= \n", p, "\n")
 coord.request_stop()
 coord.join(threads)
+
+
+plt.plot(xc,yc_cost)
+plt.show()
+
+plt.plot(xc,yc_acc)
+plt.show()
