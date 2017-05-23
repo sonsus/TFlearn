@@ -43,7 +43,7 @@ threads=tf.train.start_queue_runners(sess=sess, coord=coord)
 for step in range(2001):
 	x_batch, y_batch=sess.run([train_x_batch, train_y_batch])
 	cost_val, hyp_val, _=sess.run([cost,hyp,train], feed_dict={X:x_batch, Y:y_batch})
-	if step%500==1: 
+	if step%500==0: 
 		print(step, "cost: ", cost_val, "\tprediction\t", hyp_val)
 
 coord.request_stop()
