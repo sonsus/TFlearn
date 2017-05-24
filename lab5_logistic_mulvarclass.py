@@ -3,18 +3,18 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-np_xy=np.loadtxt("diabetes.csv",delimiter=",",dtype=np.float32)
+np_xy=np.loadtxt("lab5_diabetes.csv",delimiter=",",dtype=np.float32)
 mat_len=len(np_xy[0,:])
 n_param=mat_len-1
 
-fq=tf.train.string_input_producer(["diabetes.csv"], name="fq")
+fq=tf.train.string_input_producer(["lab5_diabetes.csv"], name="fq")
 reader=tf.TextLineReader()
 key, val= reader.read(fq)
 
 record_defaults=[[0.] for i in range(mat_len)]
 xy=tf.decode_csv(val, record_defaults=record_defaults)
 
-train_xb, train_yb= tf.train.batch([xy[0:-1],xy[-1:]], batch_size=20)
+train_xb, train_yb= tf.train.batch([xy[0:-1],xy[-1:]], batch_size=50)
 
 
 X=tf.placeholder(tf.float32, shape=[None,n_param])
