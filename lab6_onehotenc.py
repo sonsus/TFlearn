@@ -12,11 +12,10 @@ y_data=xy[:,-3:]
 x_len=len(x_data[0,:])
 y_len=len(y_data[0,:])
 
-
 X=tf.placeholder("float", [None, x_len])
 Y=tf.placeholder("float", [None, y_len])
 
-W=tf.Variable(tf.random_normal([x_len,y_len]),name="weight")
+W=tf.Variable(tf.random_normal([x_len,y_len]), name="weight")
 b=tf.Variable(tf.random_normal([y_len]), name="bias")
 
 hyp=tf.nn.softmax(tf.matmul(X,W)+b)
