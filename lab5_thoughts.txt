@@ -7,5 +7,5 @@ multivariate classification
 cost function diminishes but oscillates so much!
 :because the nature of the data (or diabetes) has more complex function than it couldn't be approximated well with monolayer with logistic activation
 
-cost function vs step varies every single training!
+thus cost and step may vary every single training!
 :you set random variable as a initial value for W and b.
