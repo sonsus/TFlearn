@@ -3,12 +3,14 @@
 import tensorflow as tf
 tf.set_random_seed(777)  # for reproducibility
 
+logf=open("log.txt","w")
+logf.write("for lab 7\n\n")
+
 learning_rate=float(input("learning rate (1e-8~0.1), float: "))
-print(learning_rate, type(learning_rate))
+logf.write("learningrate=%s\n"%learning_rate)
 epoch=int(input("epoch in int: "))
-print(epoch,type(epoch))
+logf.write("epoch=%s\n"%epoch)
 stamp=int(input("how often do you want to see the vals? int: "))
-print(stamp,type(stamp))
 
 #multivariable classification with given 3-classed one-hot vectors as a tagging 
 
@@ -59,9 +61,14 @@ with tf.Session() as sess:
     for step in range(epoch):
         c,p,a,w,_=sess.run( [cost, pred, acc, W, optimizer], feed_dict={X: x_data,Y:y_data} )
         if step%stamp==0:
-            print("step: {step} \ncost={c}\tpred={p}\nacc={a}\tw={w}\n\n".format(step=step, c=c, p=p, a=a, w=w))
+            logf.write("\nstep: {step} \ncost={c}\npred={p}\nacc={a}\nw={w}\n".format(step=step, c=c, p=p, a=a, w=w))
+            print("\nstep: {step} \ncost={c}\npred={p}\nacc={a}\nw={w}".format(step=step, c=c, p=p, a=a, w=w))
     #test
-    print("Prediction test:", sess.run(pred, feed_dict={X:x_test})) 
-    print("accuracy eval:", sess.run(acc, feed_dict={X:x_test, Y:y_test}))
+    print("Prediction:%s"%sess.run(pred, feed_dict={X:x_test}))
+    logf.write("Prediction:%s\n"%sess.run(pred, feed_dict={X:x_test})) 
+    print("accuracy eval:%s"%sess.run(acc, feed_dict={X:x_test, Y:y_test}))
+    logf.write("accuracy eval:%s\n"%sess.run(acc, feed_dict={X:x_test, Y:y_test}))
+
+logf.close()
 
 
