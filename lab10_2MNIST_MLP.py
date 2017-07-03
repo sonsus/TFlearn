@@ -20,6 +20,8 @@ hidden layer: 128x128
 output layer: 128x10
 '''
 
+#The code below looks primitive af! Remember there is OOPS which is an idea totally ok to deploy.
+
 with tf.name_scope("input_layer") as scope:
     W1=tf.get_variable("W1", [784,128], 
         initializer=tf.contrib.layers.xavier_initializer())
@@ -111,7 +113,7 @@ with tf.Session() as sess: #tf.Session.close() is a requirement-pair.
             feed_dict= {X:batch_xs, Y:batch_ys, keep_prob:0.7} 
             s, c, _=sess.run([summary, cost, train], feed_dict=feed_dict)
             avg_cost += c/total_batch
-        writer.add_summary(s, global_step=epoch*total_batch) #tensorboard plotting
+        writer.add_summary(s, global_step=i*total_batch) #tensorboard plotting
             
         print("EPOCH=%04d"%(i+1), "avgCOST={:.9f}".format(avg_cost))
     print("Learning all done")
