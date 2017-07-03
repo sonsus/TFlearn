@@ -59,8 +59,8 @@ epoch=5000
 accuracy_list=[]
 cost_list=[]
 
-summary= tf.summary.merge_all()
 with tf.Session() as sess:
+    summary= tf.summary.merge_all()
     writer=tf.summary.FileWriter("./lab9_xor")
     writer.add_graph(sess.graph)
 
