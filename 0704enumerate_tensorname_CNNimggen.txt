@@ -1,0 +1,8 @@
+[n.name for n in tf.get_default_graph().as_graph_def().node]
+
+show_graph
+
+
+CNN image generation
+
+http://nbviewer.jupyter.org/github/tensorflow/tensorflow/blob/master/tensorflow/examples/tutorials/deepdream/deepdream.ipynb
