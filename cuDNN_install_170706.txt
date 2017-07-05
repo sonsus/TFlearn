@@ -1,0 +1,84 @@
+written by SEONIL
+Jul 06 2017
+tensorflow 1.2.1 with GPU acceleration library( cuDNN ) install: for windows!
+
+
+win10 64bit
+GTX 750ti 
+python 3.5, 3.6 (both compatible)
+Anaconda 4.3.1
+
+=====================================================================================================================
+Anaconda is a package manager for python(not sure only for python..?)
+
+1. goto anaconda.org
+2. get download file and install. no need to configure environmentd var manually
+3. it sets python version as 3.6 as default but it is easy to create virtual env with conda
+4. before starting to use, I recommend you to add conda-forge channel for user validated builds of the packages by typing lines below
+
+>  conda config --add channels conda-forge  
+>  conda install <package-name>
+
+since sometimes packages in default channel cause has some compatibility issues btw packages
+
+5. create the environment with the python version you want. 
+> conda create -n (env name you want) python=3.5 numpy matplotlib jupyter
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^ package names you want
+6. you can only install tensorflow-gpu build via pip as introduced below. 
+=====================================================================================================================
+Tensorflow 1.2.1 installation with GPU library
+
+1. before start, check if there is Visual Studio 2015 , beware that CUDA 8.0 does not support VS2017.
+https://www.visualstudio.com/ko/downloads/?rr=https%3A%2F%2Fwww.google.co.kr%2F
+
+(otherwise you will see installer complaining for it: warning during the graphic driver installation.
+ -> Incomplete installation of the driver that might lack of Nsight) not sure this might cause some prob? 
+
+
+
+2. after VS installation is done, go download CUDA 8.0 graphic driver. 
+https://developer.nvidia.com/cuda-downloads
+
+if done correctly you will see the env-variables are added. 
+-> C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0
+
+
+
+3. go get cuDNN library files
+https://developer.nvidia.com/rdp/cudnn-download
+
+you can read the documentation provided but its poorly written.
+(1) explore to the env_var added in the last step. (C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0)
+(2) inside the zip file you got there would be subdirectories /cuda/lib; /cuda/bin; cuda/include
+    and each has cuDNN configuration files.
+(3) copy those into the corresponding subdirectories 
+    e.g. from cuda/lib  ->     C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\lib
+              cuda/bin  ->     C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin
+              cuda/include->   C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include
+
+
+
+4. install tensorflow-gpu by typing as below, (check pip version. it needs to be brand new)
+
+on cmd
+> activate py36
+> pip install tensorflow-gpu 
+> conda install numpy matplotlib jupyter scipy 
+
+
+
+5.***important: goto C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0 *** 
+  rename
+  cudnn64_6.dll   ->   cudnn64_5.dll
+
+
+
+6. now test does it deploy GPU for its computation
+
+> activate py36
+> python
+> import tensorflow as tf
+> sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+
+if you see your GPU device name at the end of the wall of outprint, it is working properly!
+(you can execute dxdiag to see what's your device)

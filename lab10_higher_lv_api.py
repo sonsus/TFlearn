@@ -34,6 +34,7 @@ with arg_scope([fully_connected],
                 weights_initializer=xavier_init,
                 biases_initializer=None,
                 normalizer_fn=batch_norm,
+                normalizer_params=bn_params
                 ):
     h1=fully_connected(X, h_out_dim, scope="h1")
     h1_d=dropout(h1, keep_rate, is_training=trainmode)
@@ -51,12 +52,20 @@ with arg_scope([fully_connected],
     h7_d=dropout(h7, keep_rate, is_training=trainmode)
     hyp=fully_connected(h7_d, fin_out_dim, activation_fn=None, scope="hypothesis")
 
-cost=tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
+
+with tf.name_scope("cost") as scope:
+    cost=tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
                                         logits=hyp, labels=Y))
-optimizer=tf.train.AdamOptimizer(learning_rate=learn_rate).minimize(cost)
+    tf.summary.scalar("cost", cost)
+with tf.name_scope("train") as scope:
+    optimizer=tf.train.AdamOptimizer(learning_rate=learn_rate).minimize(cost)
 
 sess= tf.Session()
 sess.run(tf.global_variables_initializer())
+
+summary=tf.summary.merge_all()
+writer=tf.summary.FileWriter("./TB_scalar")
+writer.add_graph(sess.graph)
 
 for epoch in range(n_epoch):
     avg_cost=0
@@ -67,8 +76,10 @@ for epoch in range(n_epoch):
         cost_feed= {X: batch_x, Y: batch_y, trainmode: False}
         train=sess.run(optimizer,feed_dict=train_feed)
         c=sess.run(cost, feed_dict=cost_feed)
+        s=sess.run(summary, feed_dict=train_feed)
         avg_cost += c/total_batch
-    print("Epoch={:>5}, cost={:>.10}".format(epoch+1, avg_cost)) #look at this pretty primitive regex. I might want this for later
+        writer.add_summary(s, global_step=step+epoch*total_batch)
+    print("Epoch={:>5}, cost={:>.10}".formats(epoch+1, avg_cost)) #look at this pretty primitive regex. I might want this for later
 print("Learning Done!")
 
 correct_prediction = tf.equal(tf.argmax(hyp, 1), tf.argmax(Y, 1))
